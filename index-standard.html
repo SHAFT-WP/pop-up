@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OFFSET Tactics · Standard layout</title>
+<link rel="stylesheet" href="./offset.css?v=dc368cfaafc0">
+  <link rel="stylesheet" href="./common/ui/result-panel-v0.1.css?v=dc368cfaafc0">
+</head>
+<body>
+<main class="app" id="offset-calculator">
+  <header class="topbar">
+    <div>
+      <h1 id="offset-page-title">OFFSET Tactics</h1>
+      <div class="subline">V2 modular work · Bomb Delivery Planner v0.3 authority · Offset-specific geometry retained locally</div>
+    </div>
+    <div class="toolbar">
+      <a class="btn" href="./index.html">PC Wide</a>
+      <label class="flight-size-control" for="flight-size"><span>Size of Flight</span><select id="flight-size"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+      <span class="temp-def" role="group" aria-label="Temp Def: temporary default staging">
+        <span class="temp-def-label">Temp Def</span>
+        <button type="button" class="btn tab-tool" id="temp-def-save">Save</button>
+        <button type="button" class="btn tab-tool" id="temp-def-copy">Copy</button>
+        <button type="button" class="btn tab-tool" id="temp-def-clear">Clear</button>
+        <span class="temp-def-status" id="temp-def-status">none</span>
+      </span>
+      <span class="rev">V2 WORK · OFFSET BE 0.2.7</span>
+    </div>
+  </header>
+
+  <section class="section" data-tab="bdp" aria-labelledby="bomb-target-title">
+    <div class="section-head"><h2 id="bomb-target-title">BDP #1</h2></div>
+    <details class="input-panel" open>
+      <summary>Bomb · Target</summary>
+      <div class="input-panel-body"><div class="input-grid">
+        <label class="field"><span>Bomb</span><select data-key="weaponId"></select><span class="unit">BDP weapon database</span></label>
+        <label class="field"><span>Target Elevation (ft MSL)</span><input data-key="targetElevationMslFt" type="text" inputmode="decimal" value="31"><span class="unit">Target MSL</span></label>
+        <label class="field advanced-only bdp-extra"><span>Wind Direction FROM (deg) <span class="adv-tag">ADV</span></span><input data-key="windDirectionDeg" type="text" inputmode="decimal" value="0"><span class="unit">TRUE · wind FROM</span></label>
+        <label class="field advanced-only bdp-extra"><span>Wind Speed (kt) <span class="adv-tag">ADV</span></span><input data-key="windSpeedKt" type="text" inputmode="decimal" value="0"><span class="unit">V2 canonical unit</span></label>
+      </div></div>
+    </details>
+    <details class="input-panel" open>
+      <summary id="dive-profile-title">Dive Profile</summary>
+      <div class="input-panel-body"><div class="input-grid">
+        <label class="field"><span>Initial Speed</span><span class="compound"><input data-key="initialSpeedValue" type="text" inputmode="decimal" value="350"><select data-key="initialSpeedMode"><option value="CAS" selected>kcas</option><option value="MACH">Mach</option></select></span><span class="unit">Roll-in start speed input</span></label>
+        <label class="field"><span class="lock-title"><span>Initial Altitude (ft MSL)</span><button id="initial-link-btn" class="lock-button" type="button" aria-label="Link Initial Altitude to Roll-in Altitude" aria-pressed="true">LINKED</button></span><input data-key="initialAltitudeMslFt" type="text" inputmode="decimal" value="16000"><span class="unit" data-initial-link-note>Linked to Roll-in Altitude</span></label>
+        <label class="field"><span>Roll-in Altitude (ft MSL)</span><input data-key="rollInAltitudeMslFt" type="text" inputmode="decimal" value="16000"><span class="unit">OA1 / BDP entry altitude</span></label>
+        <label class="field"><span>Dive Angle (deg)</span><input data-key="diveAngleDeg" type="text" inputmode="decimal" value="45"><span class="unit">Shared with Offset item 2</span></label>
+        <label class="field advanced-only bdp-extra"><span>Angle Off (deg) <span class="adv-tag">ADV</span></span><input data-key="angleOffDeg" type="text" inputmode="decimal" value="70"><span class="unit">Same BDP / Offset parameter</span></label>
+        <label class="field"><span>Tracking Time (sec)</span><input data-key="trackingTimeSec" type="text" inputmode="decimal" value="18.0"><span class="unit">Track Point → Release · 0.1 s</span></label>
+        <label class="field"><span>Release Altitude (ft MSL)</span><input data-key="releaseAltitudeMslFt" type="text" inputmode="decimal" value="6800"><span class="unit">NLT clamp is BDP-owned</span></label>
+        <label class="field"><span>Release Speed (kcas)</span><input data-key="releaseSpeedKcas" type="text" inputmode="decimal" value="450"><span class="unit">Release speed</span></label>
+        <label class="field advanced-only bdp-extra"><span>Roll-in Bank Angle (deg) <span class="adv-tag">ADV</span></span><input data-key="rollInBankAngleDeg" type="text" inputmode="decimal" value="" readonly data-bdp-result title="Solved by BDP (Roll-in model B)"><span class="unit">Result · solved by BDP (Roll-in model B)</span></label>
+        <label class="field advanced-only bdp-extra"><span>Roll-in G (G) <span class="adv-tag">ADV</span></span><input data-key="rollInG" type="text" inputmode="decimal" value="4"><span class="unit">BDP roll-in input</span></label>
+        <label class="field advanced-only bdp-extra"><span>Roll-in Rate (deg/s) <span class="adv-tag">ADV</span></span><input data-key="rollInRollRateDegSec" type="text" inputmode="decimal" value="60"><span class="unit">Roll-in and Offset Turn roll · linear</span></label>
+        <label class="field advanced-only bdp-extra"><span>Roll-out Rate (deg/s) <span class="adv-tag">ADV</span></span><input data-key="rollOutRollRateDegSec" type="text" inputmode="decimal" value="55"><span class="unit">Roll-out · linear</span></label>
+        <label class="field advanced-only bdp-extra"><span>G Onset Rate (G/s) <span class="adv-tag">ADV</span></span><input data-key="gOnsetRateGSec" type="text" inputmode="decimal" value="2"><span class="unit">Roll-in and Offset Turn pull · linear</span></label>
+        <label class="field advanced-only bdp-extra"><span>SEM End <span class="adv-tag">ADV</span></span><select data-key="semEnd"><option value="LEVEL">Level (pull to FPA 0°, then 1 G)</option><option value="CLIMB">CSEM (climb to Target FPA)</option></select><span class="unit">Every BDP view and S&amp;R fly this SEM</span></label>
+        <label class="field advanced-only bdp-extra" data-csem-only><span>CSEM Target FPA (deg) <span class="adv-tag">ADV</span></span><input data-key="csemTargetFpaDeg" type="text" inputmode="decimal" value="30"><span class="unit">Flight path angle, &gt; 20° and &lt; 90° · G falls linearly from +20°</span></label>
+        <label class="field advanced-only bdp-extra"><span>Recovery G (G) <span class="adv-tag">ADV</span></span><input data-key="recoveryG" type="text" inputmode="decimal" value="5"><span class="unit">V2 canonical safety input</span></label>
+        <label class="field advanced-only bdp-extra"><span>Speed Overshoot (kcas) <span class="adv-tag">ADV</span></span><input data-key="speedOvershootKcas" type="text" inputmode="decimal" value="50"><span class="unit">BDP safety input</span></label>
+        <label class="field advanced-only bdp-extra"><span>G Onset Time (sec) <span class="adv-tag">ADV</span></span><input data-key="gOnsetTimeSec" type="text" inputmode="decimal" value="2"><span class="unit">V2 SEM/NLT input · onset starts at Release</span></label>
+        <label class="field advanced-only bdp-extra"><span>Fragment Height Margin (%) <span class="adv-tag">ADV</span></span><input data-key="fragmentHeightMarginPercent" type="text" inputmode="decimal" value="20"></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only><span>SEM Turn <span class="adv-tag">ADV</span></span><select data-key="semTurnType"><option value="LEVEL">Level turn (bank AUTO)</option><option value="SLICE">Slice (entered bank, descends)</option></select><span class="unit">Right at the level-off · speed and G held · Roll-in onsets</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only><span>Turn Direction <span class="adv-tag">ADV</span></span><select data-key="semTurnDirection"><option value="">Roll-in direction</option><option value="LEFT">Left</option><option value="RIGHT">Right</option></select><span class="unit">Blank: this aircraft's Roll-in side</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only><span>Turn Amount (deg) <span class="adv-tag">ADV</span></span><input data-key="semTurnDeg" type="text" inputmode="decimal" value="90"><span class="unit">Heading change · 0 = no turn · up to 360</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only><span>Turn G (G) <span class="adv-tag">ADV</span></span><input data-key="semTurnG" type="text" inputmode="decimal" value="" placeholder="Recovery G"><span class="unit">Sustained · blank: Recovery G</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only><span>Turn Speed (kcas) <span class="adv-tag">ADV</span></span><input data-key="semTurnSpeedKcas" type="text" inputmode="decimal" value="" placeholder="Level-off"><span class="unit">Held · blank: the level-off speed</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only data-sem-turn-level-only><span>Turn Bank <span class="adv-tag">ADV</span></span><output data-sem-turn-auto-bank>AUTO</output><span class="unit">Level turn: acos(1/G)</span></label>
+        <label class="field advanced-only bdp-extra" data-level-sem-only data-sem-turn-slice-only><span>Turn Bank (deg) <span class="adv-tag">ADV</span></span><input data-key="semTurnBankDeg" type="text" inputmode="decimal" value="85"><span class="unit">Slice: above acos(1/G), up to 150° · G held, the nose falls · then a pull to level at G</span></label>
+      </div><div data-sem-readouts id="lead-sem-readouts"></div></div>
+    </details>
+  </section>
+
+  <section class="section reference-point-section" data-tab="reference" aria-labelledby="reference-point-title">
+    <div class="section-head"><h2 id="reference-point-title">Reference Point</h2></div>
+    <div class="mode-switch reference-mode-switch" role="group" aria-label="Reference Point mode">
+      <button id="vrp-btn" class="mode-button active" type="button">VRP</button>
+      <button id="vip-btn" class="mode-button" type="button">VIP</button>
+    </div>
+
+    <div id="vrp-pane" class="mode-pane reference-input-pane">
+      <div class="lock-title"><div class="offset-title">VRP</div><button id="vrp-lock-btn" class="lock-button" type="button" data-lock-key="vrpReference" aria-label="Lock VRP" aria-pressed="false">LOCK</button></div>
+      <div class="input-grid">
+        <label class="field advanced-only"><span>Bearing (FROM TARGET) <span class="adv-tag">ADV</span></span><input id="vrp-bearing-input" type="text" inputmode="decimal" value="180"><span class="unit">TRUE</span></label>
+        <label class="field advanced-only"><span>Range <span class="adv-tag">ADV</span></span><input data-key="vrpRangeNm" type="text" inputmode="decimal" value="7.0"><span class="unit">NM · Offset start</span></label>
+      </div>
+    </div>
+
+    <div id="vip-pane" class="mode-pane reference-input-pane" hidden>
+      <div class="offset-title">VIP</div>
+      <div class="mode-switch" role="group" aria-label="VIP bearing direction">
+        <button id="vip-to-target-btn" class="mode-button active" type="button" aria-pressed="true">TO TARGET</button>
+        <button id="vip-from-target-btn" class="mode-button" type="button" aria-pressed="false">FROM TARGET</button>
+      </div>
+      <div class="input-grid">
+        <label class="field"><span>Bearing (TBRG)</span><input id="vip-bearing-input" type="text" inputmode="decimal" value="000"><span class="unit">TRUE</span></label>
+        <label class="field"><span>Range</span><input id="vip-range-input" type="text" inputmode="decimal" value="10.0"><span class="unit">NM</span></label>
+      </div>
+    </div>
+
+    <details class="input-panel reference-advanced advanced-only">
+      <summary id="reference-advanced-title">IP · Advanced</summary>
+      <div class="input-panel-body reference-advanced-body">
+        <div id="ip-pane" class="mode-pane">
+          <div class="lock-title"><div class="offset-title">IP</div><button id="ip-lock-btn" class="lock-button" type="button" data-lock-key="ipReference" aria-label="Lock IP" aria-pressed="false">LOCK</button></div>
+          <div class="mode-switch" role="group" aria-label="IP bearing direction">
+            <button id="ip-to-target-btn" class="mode-button active" type="button" aria-pressed="true">TO TARGET</button>
+            <button id="ip-from-target-btn" class="mode-button" type="button" aria-pressed="false">FROM TARGET</button>
+          </div>
+          <div class="input-grid">
+            <label class="field"><span>Bearing (TBRG)</span><input id="ip-bearing-input" data-key="runInHeadingDeg" type="text" inputmode="decimal" value="000"><span class="unit">TRUE</span></label>
+            <label class="field"><span>Range</span><input data-key="ipRangeNm" type="text" inputmode="decimal" value="10.0"><span class="unit">NM · Default = VRP + 3 NM</span></label>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="section" data-tab="offset" aria-labelledby="offset-input-title">
+    <div class="section-head"><h2 id="offset-input-title">Offset #1</h2><div style="display:flex;gap:8px;align-items:center"><span id="lock-count" class="mode">LOCK 0</span><span id="state-pill" class="status ok">VALID</span></div></div>
+    <div class="driver"><span>마지막 수정값은 Driver. LOCK 값은 자동 계산으로 덮어쓰지 않음.</span><output id="driver-out">DRIVER · vrpRangeNm</output></div>
+
+    <div class="offset-grid">
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">1</b>Run-In Heading</span><button class="lock-button" type="button" data-lock-key="runInHeadingDeg" aria-pressed="false">LOCK</button></span><input data-key="runInHeadingDeg" type="text" inputmode="decimal" value="000"><span class="unit">IP → Target · true heading</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">2</b>Dive Angle</span><button class="lock-button" type="button" data-lock-key="diveAngleDeg" aria-pressed="false">LOCK</button></span><input data-key="diveAngleDeg" type="text" inputmode="decimal" value="45"><span class="unit">Shared BDP input</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">3</b>Angle Off</span><button class="lock-button" type="button" data-lock-key="angleOffDeg" aria-pressed="false">LOCK</button></span><input data-key="angleOffDeg" type="text" inputmode="decimal" value="70"><span class="unit">Approaching Heading → Attack Heading · same BDP parameter</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">4</b>Attack Heading</span><button class="lock-button" type="button" data-lock-key="attackHeadingDeg" aria-pressed="false">LOCK</button></span><input data-key="attackHeadingDeg" type="text" inputmode="decimal" value="030"><span class="unit">Final attack axis · coupled heading constraint</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">5</b>Offset Angle</span><button class="lock-button" type="button" data-lock-key="offsetAngleDeg" aria-pressed="false">LOCK</button></span><input data-key="offsetAngleDeg" type="text" inputmode="decimal" value="40"><span class="unit">Run-In → Approaching Heading change</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">6</b>Action Range</span><button class="lock-button" type="button" data-lock-key="actionRangeNm" aria-pressed="false">LOCK</button></span><input data-key="actionRangeNm" type="text" inputmode="decimal" value="7.0"><span class="unit">Target → Action Point · must remain between Target and IP</span></label>
+      <label class="offset-card"><span class="lock-title"><span class="offset-title"><b class="step">7</b>Approach Range</span><button class="lock-button" type="button" data-lock-key="approachRangeNm" aria-pressed="false">LOCK</button></span><input data-key="approachRangeNm" type="text" inputmode="decimal" value="1.0"><span class="unit">Offset Turn End → Roll-in Start · NM</span></label>
+      <div class="offset-card"><span class="offset-title"><b class="step">8</b>Approaching Heading</span><output id="offset-heading-out" class="readout offset-heading">-</output><span class="unit">Offset Turn completion → Roll-in Start</span></div>
+
+      <div class="offset-card span2">
+        <div class="offset-title"><b class="step">9</b>Offset Turn Condition</div>
+        <div class="input-grid">
+          <label class="field"><span class="lock-title"><span>Altitude (ft MSL)</span><button class="lock-button" type="button" data-lock-key="offsetAltitudeMslFt" aria-pressed="false">LOCK</button></span><input data-key="offsetAltitudeMslFt" type="text" inputmode="decimal" value="16000"></label>
+          <label class="field"><span class="lock-title"><span>Speed</span><button class="lock-button" type="button" data-lock-key="offsetSpeedValue" aria-pressed="false">LOCK</button></span><span class="compound"><input data-key="offsetSpeedValue" type="text" inputmode="decimal" value="350"><select data-key="offsetSpeedMode"><option value="CAS" selected>kcas</option><option value="MACH">Mach</option></select></span></label>
+          <label class="field"><span class="lock-title"><span>G</span><button class="lock-button" type="button" data-lock-key="offsetG" aria-pressed="false">LOCK</button></span><input data-key="offsetG" type="text" inputmode="decimal" value="2.0"></label>
+          <label class="field"><span class="lock-title"><span>Bank (deg)</span><button class="lock-button" type="button" data-lock-key="offsetBankDeg" aria-pressed="false">LOCK</button></span><input data-key="offsetBankDeg" type="text" inputmode="decimal" value="60"></label>
+          <label class="field"><span class="lock-title"><span>Radius (NM)</span><button class="lock-button" type="button" data-lock-key="offsetRadiusNm" aria-pressed="false">LOCK</button></span><input data-key="offsetRadiusNm" type="text" inputmode="decimal" value="1.6"></label>
+          <div class="field"><span>Turn Time</span><output id="turn-time-out" class="readout">-</output><span class="unit">Actual TAS / Radius / Offset Angle</span></div>
+        </div>
+        <div class="constraint-note">G / Bank / Radius are coupled. Multiple LOCK values must be mathematically consistent or the BE returns CONSTRAINT CONFLICT.</div>
+      </div>
+    </div>
+    <div id="constraint-message" class="status-message valid">-</div>
+  </section>
+
+
+  <section class="section top-view-section" aria-labelledby="top-view-title">
+    <div class="section-head">
+      <h2 id="top-view-title">Offset Top View</h2>
+      <div class="diagram-actions">
+        <div class="diagram-action-row top-view-aircraft" role="group" aria-label="Aircraft drawn in the Top View">
+          <span class="diagram-control-label">Aircraft</span>
+          <button class="capture-button view-toggle active" type="button" data-top-view-aircraft-button="1" aria-pressed="true">#1</button>
+          <button class="capture-button view-toggle" type="button" data-top-view-aircraft-button="2" aria-pressed="false" hidden>#2</button>
+          <button class="capture-button view-toggle" type="button" data-top-view-aircraft-button="3" aria-pressed="false" hidden>#3</button>
+          <button class="capture-button view-toggle" type="button" data-top-view-aircraft-button="4" aria-pressed="false" hidden>#4</button>
+        </div>
+        <div class="diagram-action-row">
+          <div class="font-scale-control" role="group" aria-label="Top View font size">
+            <span class="diagram-control-label">Text</span>
+            <button class="capture-button" id="top-view-font-down" type="button" aria-label="Top View font smaller">-</button>
+            <button class="capture-button diagram-scale-output" id="top-view-font-scale-output" type="button" aria-label="Reset Top View text size to 100%">100%</button>
+            <button class="capture-button" id="top-view-font-up" type="button" aria-label="Top View font larger">+</button>
+            <select id="top-view-font-scale" hidden aria-hidden="true" tabindex="-1"><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.7">70%</option><option value="0.8">80%</option><option value="0.9">90%</option><option value="1" selected>100%</option><option value="1.1">110%</option><option value="1.2">120%</option><option value="1.3">130%</option><option value="1.4">140%</option><option value="1.5">150%</option><option value="1.6">160%</option><option value="1.7">170%</option><option value="1.8">180%</option><option value="1.9">190%</option><option value="2">200%</option></select>
+          </div>
+          <div class="view-scale-control" role="group" aria-label="Top View picture size">
+            <span class="diagram-control-label">Size</span>
+            <button class="capture-button" id="zoom-out" type="button" aria-label="Picture smaller">-</button>
+            <button class="capture-button diagram-scale-output" id="top-view-size-output" type="button" aria-label="Reset Top View size to 100%">100%</button>
+            <button class="capture-button" id="zoom-in" type="button" aria-label="Picture larger">+</button>
+          </div>
+          <button class="capture-button" id="zoom-reset" type="button">Reset</button>
+          <button class="capture-button" id="capture-top-view" type="button">PNG</button>
+          <button class="capture-button view-toggle" id="top-view-ip-bottom" type="button" aria-pressed="true" title="Run-In (IP → Target) up; off = north up">IP Bottom</button>
+          <button class="capture-button" id="top-view-advanced" type="button" aria-pressed="false">Advanced: Off</button>
+          <button class="capture-button view-toggle" id="full-views-1" type="button" data-full-views="all" aria-pressed="false" title="Show BDP Top View and BDP Profile of every aircraft">Full</button>
+        </div>
+        <div class="diagram-action-row time-dial" id="top-view-time-dial" data-time-dial="1" role="group" aria-label="Top View #1 time after IP">
+          <span class="diagram-control-label">Time</span>
+          <button class="capture-button time-dial-play" type="button" data-time-play aria-pressed="false" title="Play the time dial">Play</button>
+          <button class="capture-button time-dial-speed" type="button" data-time-speed title="Play speed: press for the next (1×, 2× real time)">1×</button>
+          <input class="time-dial-range" type="range" min="0" max="1" step="1" value="0" data-time-range aria-label="Seconds after IP">
+          <button class="capture-button diagram-scale-output time-dial-output" type="button" data-time-output aria-pressed="false" title="Seconds after IP; press to turn off">Off</button>
+        </div>
+      </div>
+    </div>
+    <div class="top-view-shell"><svg data-export-legend="offset-legend" id="offset-top-view" viewBox="0 0 900 1100" role="img" aria-label="Offset #1 Top View" data-export-title="Offset #1 Top View"></svg></div>
+    <svg class="diagram-legend-box" id="offset-legend" role="img" aria-label="Offset Top View legend"></svg>
+  </section>
+
+  <div class="bdp-views" data-bdp-views="1"><div data-bdp-diagrams-host="1"></div></div>
+
+  <section class="section z-diagram-section" aria-labelledby="offset-z-title">
+    <div class="section-head"><h2 id="offset-z-title">Offset #1 Z-Diagram</h2><div class="diagram-action-row"><button class="btn" id="capture-z" type="button">PNG</button><button class="capture-button view-toggle" id="z-advanced-1" type="button" data-z-advanced="1" aria-pressed="false">Advanced: Off</button></div></div>
+    <div class="z-diagram-shell"><svg id="offset-z-svg" viewBox="0 0 650 770" role="img" aria-label="Offset #1 Z-Diagram"><g data-z-root></g></svg></div>
+  </section>
+
+  <section class="section compact-results" id="result-section" data-result-panel><div class="result-panel-head"><h2>Result #1</h2><div data-result-controls aria-label="Result display controls"></div></div><div class="result-panel-body"><div data-result-group><h3>Offset</h3><table><tbody class="result-rows" id="offset-result-body"></tbody></table></div><div data-result-group><h3>Bomb Profile</h3><table><tbody class="result-rows" id="profile-result-body"></tbody></table></div><p data-result-empty>No available summary results.</p></div></section>
+
+  <section class="section ded-section" aria-labelledby="ded-title">
+    <div class="section-head"><h2 id="ded-title">DED #1</h2></div>
+    <div hidden aria-hidden="true">
+      <button id="ded-vrp-tab" class="ded-tab active" type="button" data-ded-page="VRP">VRP</button>
+      <button id="ded-vip-tab" class="ded-tab" type="button" data-ded-page="VIP">VIP</button>
+      <button id="ded-oa1-tab" class="ded-tab" type="button" data-ded-page="OA1">OA1</button>
+      <button id="ded-oa2-tab" class="ded-tab" type="button" data-ded-page="OA2">OA2</button>
+    </div>
+    <div class="ded-boxes">
+      <div class="ded-screen" id="ded-reference-screen" aria-live="polite">
+        <div class="ded-page-title" id="ded-page-title">VRP</div>
+        <div class="ded-row"><span>TBRG</span><output id="ded-bearing">-</output></div>
+        <div class="ded-row"><span>RNG</span><output id="ded-range">-</output></div>
+        <div class="ded-row"><span>ELEV</span><output id="ded-elevation">-</output></div>
+      </div>
+      <div class="ded-screen" id="ded-oa1-screen" aria-live="polite">
+        <div class="ded-page-title">OA1</div>
+        <div class="ded-row"><span>RNG</span><output id="ded-oa1-range">-</output></div>
+        <div class="ded-row"><span>TBRG</span><output id="ded-oa1-bearing">-</output></div>
+        <div class="ded-row"><span>ELEV</span><output id="ded-oa1-elevation">-</output></div>
+      </div>
+    </div>
+  </section>
+
+
+  <div id="flight-followers"></div>
+</main>
+<script type="module" src="./controller-v0.1.mjs?v=dc368cfaafc0"></script>
+
+</body>
+</html>
